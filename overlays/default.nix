@@ -1,12 +1,20 @@
 _final: prev: {
   pythonPackagesExtensions = prev.pythonPackagesExtensions ++ [
-    (py-final: _py-prev: {
+    (py-final: py-prev: {
+      # Override docling to relax version constraints for docling-parse and typer
+      docling = py-prev.docling.overridePythonAttrs (old: {
+        pythonRelaxDeps = (old.pythonRelaxDeps or [ ]) ++ [
+          "typer"
+          "docling-parse"
+        ];
+      });
       docling-parse = py-final.callPackage ../packages/docling-parse/package.nix { };
       fhaviary = py-final.callPackage ../packages/fhaviary/package.nix { };
       fhlmi = py-final.callPackage ../packages/fhlmi/package.nix { };
       ldp = py-final.callPackage ../packages/ldp/package.nix { };
       openreview-py = py-final.callPackage ../packages/openreview-py/package.nix { };
       paper-qa = py-final.callPackage ../packages/paper-qa/package.nix { };
+      paper-qa-docling = py-final.callPackage ../packages/paper-qa-docling/package.nix { };
       paper-qa-nemotron = py-final.callPackage ../packages/paper-qa-nemotron/package.nix { };
       paper-qa-pymupdf = py-final.callPackage ../packages/paper-qa-pymupdf/package.nix { };
       paper-qa-pypdf = py-final.callPackage ../packages/paper-qa-pypdf/package.nix { };
