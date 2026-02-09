@@ -6,6 +6,7 @@ _final: prev: {
       paper-qa = py-final.callPackage ../packages/paper-qa/package.nix { };
       paper-qa-pymupdf = py-final.callPackage ../packages/paper-qa-pymupdf/package.nix { };
       paper-qa-pypdf = py-final.callPackage ../packages/paper-qa-pypdf/package.nix { };
+      pyzotero = py-final.callPackage ../packages/pyzotero/package.nix { };
     })
   ];
 

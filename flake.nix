@@ -41,6 +41,7 @@
               fhlmi
               paper-qa
               paper-qa-pypdf
+              pyzotero
               ;
             inherit (pkgs) pqa; # CLI wrapper
           };
