@@ -50,7 +50,7 @@ let
     };
     "313-aarch64-darwin" = {
       url = "https://files.pythonhosted.org/packages/c9/9f/b62390c85f99436fd0c40cfcdfea2b553482696ca735e4cc0eee96b765aa/docling_parse-4.7.3-cp313-cp313-macosx_14_0_arm64.whl";
-      hash = "sha256-bLT+jGLeBucObjjEvWCI9B6PnHRVKTgX5o8TYlP46JQ=";
+      hash = "sha256-bLT+jGLeBrcOazjEvWCPQeo+nXFUpOBfmjxNiUT+OiU=";
     };
   };
 

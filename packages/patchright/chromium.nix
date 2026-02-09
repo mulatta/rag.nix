@@ -29,7 +29,13 @@
   pciutils,
   systemd,
   vulkan-loader,
-  xorg,
+  libX11,
+  libXcomposite,
+  libXdamage,
+  libXext,
+  libXfixes,
+  libXrandr,
+  libxcb,
 }:
 let
   inherit (stdenv.hostPlatform) system;
@@ -99,13 +105,13 @@ let
       pango
       stdenv.cc.cc.lib
       systemd
-      xorg.libX11
-      xorg.libXcomposite
-      xorg.libXdamage
-      xorg.libXext
-      xorg.libXfixes
-      xorg.libXrandr
-      xorg.libxcb
+      libX11
+      libXcomposite
+      libXdamage
+      libXext
+      libXfixes
+      libXrandr
+      libxcb
     ];
 
     installPhase = ''
