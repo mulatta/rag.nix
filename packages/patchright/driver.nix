@@ -16,7 +16,13 @@
   at-spi2-atk,
   libdrm,
   libgbm,
-  xorg,
+  libX11,
+  libXcomposite,
+  libXdamage,
+  libXext,
+  libXfixes,
+  libXrandr,
+  libxcb,
   expat,
   libxkbcommon,
   alsa-lib,
@@ -48,6 +54,7 @@ let
 
     src = fetchzip {
       url = "https://github.com/Kaliiiiiiiiii-Vinyzu/patchright/releases/download/v${version}/playwright-${version}-${suffix}.zip";
+      stripRoot = false;
       hash =
         {
           x86_64-linux = "sha256-jQ/+4IBfwzbMgL77bfTtbMNgx7WAh2zP5obV6UNacBQ=";
@@ -69,13 +76,13 @@ let
       at-spi2-atk
       libdrm
       libgbm
-      xorg.libX11
-      xorg.libXcomposite
-      xorg.libXdamage
-      xorg.libXext
-      xorg.libXfixes
-      xorg.libXrandr
-      xorg.libxcb
+      libX11
+      libXcomposite
+      libXdamage
+      libXext
+      libXfixes
+      libXrandr
+      libxcb
       expat
       libxkbcommon
       alsa-lib
