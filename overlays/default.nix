@@ -42,6 +42,9 @@ final: prev: {
       mem0ai = py-final.callPackage ../packages/mem0ai/package.nix {
         redis = py-final.redis5;
       };
+
+      # cognee dependencies
+      cbor2 = py-final.callPackage ../packages/cbor2/package.nix { };
     })
   ];
 
