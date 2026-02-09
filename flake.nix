@@ -40,6 +40,7 @@
               fhaviary
               fhlmi
               ldp
+              openreview-py
               paper-qa
               paper-qa-pypdf
               pyzotero
