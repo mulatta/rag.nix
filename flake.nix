@@ -36,7 +36,7 @@
           };
 
           packages = {
-            inherit (pkgs.python3Packages) fhaviary;
+            inherit (pkgs.python3Packages) fhaviary fhlmi;
           };
 
           devShells.default = pkgs.mkShellNoCC {
