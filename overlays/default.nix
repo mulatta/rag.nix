@@ -1,7 +1,4 @@
 final: prev: {
-  # Patchright driver (non-Python, used by patchright Python package)
-  patchright-driver = prev.callPackage ../packages/patchright/driver.nix { };
-
   pythonPackagesExtensions = prev.pythonPackagesExtensions ++ [
     (py-final: py-prev: {
       # Override docling to relax version constraints for docling-parse and typer
