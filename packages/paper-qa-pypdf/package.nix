@@ -5,6 +5,8 @@
   setuptools,
   setuptools-scm,
   pypdf,
+  # optional
+  pypdfium2,
 }:
 
 buildPythonPackage (finalAttrs: {
@@ -30,6 +32,10 @@ buildPythonPackage (finalAttrs: {
     pypdf
     # paper-qa - circular dependency, will be satisfied at runtime
   ];
+
+  optional-dependencies = {
+    media = [ pypdfium2 ];
+  };
 
   # Circular dependency with paper-qa - skip runtime deps check
   dontCheckRuntimeDeps = true;

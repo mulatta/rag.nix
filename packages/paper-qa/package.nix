@@ -21,13 +21,17 @@
   tenacity,
   tiktoken,
   # optional
+  ldp,
+  openreview-py,
   paper-qa-docling,
   paper-qa-nemotron,
   paper-qa-pymupdf,
   pillow,
+  pyzotero,
   qdrant-client,
   sentence-transformers,
   unstructured,
+  usearch,
 }:
 
 buildPythonPackage (finalAttrs: {
@@ -68,11 +72,22 @@ buildPythonPackage (finalAttrs: {
   optional-dependencies = {
     docling = [ paper-qa-docling ];
     image = [ pillow ] ++ fhlmi.optional-dependencies.image;
+    ldp = [ ldp ];
     local = [ sentence-transformers ];
+    memory = [
+      ldp
+      usearch
+    ];
     nemotron = [ paper-qa-nemotron ];
     office = [ unstructured ];
+    openreview = [ openreview-py ];
     pymupdf = [ paper-qa-pymupdf ];
+    pypdf-media = paper-qa-pypdf.optional-dependencies.media;
     qdrant = [ qdrant-client ];
+    zotero = [
+      paper-qa-pymupdf
+      pyzotero
+    ];
   };
 
   pythonImportsCheck = [ "paperqa" ];
