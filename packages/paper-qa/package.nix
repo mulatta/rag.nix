@@ -21,6 +21,8 @@
   tenacity,
   tiktoken,
   # optional
+  paper-qa-docling,
+  paper-qa-nemotron,
   paper-qa-pymupdf,
   pillow,
   qdrant-client,
@@ -64,8 +66,10 @@ buildPythonPackage (finalAttrs: {
   ];
 
   optional-dependencies = {
+    docling = [ paper-qa-docling ];
     image = [ pillow ] ++ fhlmi.optional-dependencies.image;
     local = [ sentence-transformers ];
+    nemotron = [ paper-qa-nemotron ];
     office = [ unstructured ];
     pymupdf = [ paper-qa-pymupdf ];
     qdrant = [ qdrant-client ];
