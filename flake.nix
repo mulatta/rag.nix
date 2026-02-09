@@ -37,6 +37,7 @@
 
           packages = {
             inherit (pkgs.python3Packages)
+              docling-parse
               fhaviary
               fhlmi
               ldp
