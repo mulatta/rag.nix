@@ -43,6 +43,7 @@
               paper-qa
               paper-qa-pypdf
               pyzotero
+              usearch
               ;
             inherit (pkgs) pqa; # CLI wrapper
           };
