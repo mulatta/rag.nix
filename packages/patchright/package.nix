@@ -1,88 +1,51 @@
-# Patchright Python package
-# Based on playwright-python with patches for anti-detection.
-# Renames the package from "playwright" to "patchright" and
-# replaces the driver with a patched version from GitHub releases.
+# Patchright Python package (pre-built wheel from PyPI)
+# Upstream already includes anti-detection features (route injection,
+# isolatedContext, source URL removal) that the previous sed-based
+# approach from playwright-python source was missing entirely.
+# The bundled Node.js binary is replaced with Nix nodejs;
+# the bundled JS driver is kept as-is to match the Python client version.
 {
   lib,
   buildPythonPackage,
-  fetchFromGitHub,
-  gitMinimal,
+  fetchurl,
   greenlet,
   pyee,
   python,
-  setuptools,
-  setuptools-scm,
   nodejs,
   callPackage,
+  stdenv,
 }:
 let
   patchright-driver = callPackage ./driver.nix { };
-  inherit (patchright-driver) driver;
+  inherit (stdenv.hostPlatform) system;
+
+  wheelInfo =
+    {
+      x86_64-linux = {
+        url = "https://files.pythonhosted.org/packages/ea/86/98d8f42d5186b6864144fb25e21da8aa7cffa5b9d1d76752276610b9ea58/patchright-1.58.0-py3-none-manylinux1_x86_64.whl";
+        hash = "sha256-gyvuL+SM+dwHuzsPDQXu6SMgPzSM2YsUwsUV7s4yZzQ=";
+      };
+      aarch64-linux = {
+        url = "https://files.pythonhosted.org/packages/b9/b1/7094545c805a31235ef69316ccc910aa5ff5e940c41e85df588ca660f00d/patchright-1.58.0-py3-none-manylinux_2_17_aarch64.manylinux2014_aarch64.whl";
+        hash = "sha256-Qxsd+JZ7SRnTJqMSFEXEfxV2m8ahDc66ppkHPrfRJfk=";
+      };
+      x86_64-darwin = {
+        url = "https://files.pythonhosted.org/packages/61/c6/b1d685ccce237e280d8549454a8b5760e58ab5ee88af9ef875fad2282845/patchright-1.58.0-py3-none-macosx_10_13_x86_64.whl";
+        hash = "sha256-yq3uxbSBLxLbXiReeLfBvdnGs40sFaWfowR7BOM6PmA=";
+      };
+      aarch64-darwin = {
+        url = "https://files.pythonhosted.org/packages/61/13/e5726d38be9ecf9ed714346433f2536eb6423748836f4a22a6701b992ba0/patchright-1.58.0-py3-none-macosx_11_0_arm64.whl";
+        hash = "sha256-r1Z9lNLXNb6PqIxv+UGORjYdgj97KMEMKCPlGUJzlQc=";
+      };
+    }
+    .${system} or (throw "Unsupported system: ${system}");
 in
-buildPythonPackage (finalAttrs: {
+buildPythonPackage {
   pname = "patchright";
   version = "1.58.0";
-  pyproject = true;
+  format = "wheel";
 
-  src = fetchFromGitHub {
-    owner = "microsoft";
-    repo = "playwright-python";
-    tag = "v${finalAttrs.version}";
-    hash = "sha256-gK19pjB8TDy/kK+fb4pjwlGZlUyY26p+CNxunvIMrrY=";
-  };
-
-  postPatch = ''
-    # --- Rename package directory ---
-    mv playwright patchright
-
-    # --- Update internal imports (35 files, .patch impractical) ---
-    find patchright -type f -name '*.py' -exec sed -i \
-      -e 's/from playwright/from patchright/g' \
-      -e 's/import playwright/import patchright/g' \
-      -e 's/playwright\./patchright./g' {} \;
-
-    # --- Update pyproject.toml (substituteInPlace for fail-fast) ---
-    substituteInPlace pyproject.toml \
-      --replace-fail 'name = "playwright"' 'name = "patchright"' \
-      --replace-fail '"playwright"' '"patchright"' \
-      --replace-fail 'playwright/_repo_version.py' 'patchright/_repo_version.py' \
-      --replace-fail 'playwright.' 'patchright.' \
-      --replace-fail 'playwright =' 'patchright ='
-    sed -i \
-      -e 's/requires = \["setuptools==.*", "setuptools-scm==.*", "wheel==.*", "auditwheel==.*"\]/requires = ["setuptools", "setuptools-scm", "wheel"]/' \
-      -e '/description = /s/=.*/= "Undetected Python version of Playwright"/' \
-      pyproject.toml
-
-    # --- Remove setup.py (tries to download driver from CDN) ---
-    rm -f setup.py
-
-    # --- Version file ---
-    echo 'version = "${finalAttrs.version}"' > patchright/_repo_version.py
-
-    # --- Replace driver location ---
-    cp ${./_driver.py} patchright/_impl/_driver.py
-    substituteInPlace patchright/_impl/_driver.py \
-      --replace-fail '@node@' '${lib.getExe nodejs}' \
-      --replace-fail '@driver@' '${driver}/package/cli.js'
-
-    # --- Verify rename succeeded ---
-    test -d patchright/_impl || { echo "ERROR: patchright rename failed"; exit 1; }
-    grep -q 'patchright' pyproject.toml || { echo "ERROR: pyproject.toml patch failed"; exit 1; }
-
-    # --- Workaround for setuptools-scm ---
-    export HOME=$(mktemp -d)
-    ${gitMinimal}/bin/git init .
-    ${gitMinimal}/bin/git add -A .
-    ${gitMinimal}/bin/git config user.email "nixpkgs"
-    ${gitMinimal}/bin/git config user.name "nixpkgs"
-    ${gitMinimal}/bin/git commit -m "workaround setuptools-scm"
-  '';
-
-  build-system = [
-    gitMinimal
-    setuptools
-    setuptools-scm
-  ];
+  src = fetchurl wheelInfo;
 
   pythonRelaxDeps = [
     "greenlet"
@@ -95,7 +58,13 @@ buildPythonPackage (finalAttrs: {
   ];
 
   postInstall = ''
-    ln -s ${driver} $out/${python.sitePackages}/patchright/driver
+    SITE=$out/${python.sitePackages}/patchright
+
+    # Replace bundled Node.js binary (~117MB) with Nix-managed nodejs.
+    # Keep the bundled JS driver (v1.58.0) to match the Python client protocol.
+    chmod -R u+w $SITE/driver
+    rm $SITE/driver/node
+    ln -s ${lib.getExe nodejs} $SITE/driver/node
   '';
 
   doCheck = false;
@@ -103,7 +72,6 @@ buildPythonPackage (finalAttrs: {
   pythonImportsCheck = [ "patchright" ];
 
   passthru = {
-    inherit driver;
     inherit (patchright-driver) browsers;
   };
 
@@ -120,4 +88,4 @@ buildPythonPackage (finalAttrs: {
       "aarch64-darwin"
     ];
   };
-})
+}

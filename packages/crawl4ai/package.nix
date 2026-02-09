@@ -47,9 +47,21 @@
   sentence-transformers,
   selenium,
   # passthru
+  symlinkJoin,
   playwright-driver,
 }:
 
+let
+  # Combined browsers: playwright (chromium-1200) + patchright (chromium-1208)
+  # so both PlaywrightAdapter and UndetectedAdapter find their chromium.
+  browsers = symlinkJoin {
+    name = "crawl4ai-browsers";
+    paths = [
+      playwright-driver.browsers
+      patchright.browsers
+    ];
+  };
+in
 buildPythonPackage (finalAttrs: {
   pname = "crawl4ai";
   version = "0.8.0";
@@ -136,7 +148,7 @@ buildPythonPackage (finalAttrs: {
   ];
 
   makeWrapperArgs = [
-    "--set PLAYWRIGHT_BROWSERS_PATH ${playwright-driver.browsers}"
+    "--set PLAYWRIGHT_BROWSERS_PATH ${browsers}"
     "--set PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD 1"
   ];
 
@@ -147,7 +159,7 @@ buildPythonPackage (finalAttrs: {
   # pythonImportsCheck = [ "crawl4ai" ];
 
   passthru = {
-    inherit (patchright) browsers;
+    inherit browsers;
   };
 
   meta = {
