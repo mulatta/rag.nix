@@ -36,7 +36,13 @@
           };
 
           packages = {
-            inherit (pkgs.python3Packages) fhaviary fhlmi;
+            inherit (pkgs.python3Packages)
+              fhaviary
+              fhlmi
+              paper-qa
+              paper-qa-pypdf
+              ;
+            inherit (pkgs) pqa; # CLI wrapper
           };
 
           devShells.default = pkgs.mkShellNoCC {
