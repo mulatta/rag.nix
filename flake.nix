@@ -18,13 +18,18 @@
         "aarch64-linux"
       ];
 
-      imports = [ inputs.treefmt-nix.flakeModule ];
+      imports = [
+        ./packages/flake-module.nix
+        inputs.treefmt-nix.flakeModule
+      ];
 
       flake.overlays.default = import ./overlays;
 
       perSystem =
         {
           pkgs,
+          lib,
+          self',
           system,
           ...
         }:
@@ -35,22 +40,7 @@
             overlays = [ inputs.self.overlays.default ];
           };
 
-          packages = {
-            inherit (pkgs.python3Packages)
-              docling-parse
-              fhaviary
-              fhlmi
-              ldp
-              openreview-py
-              paper-qa
-              paper-qa-docling
-              paper-qa-nemotron
-              paper-qa-pypdf
-              pyzotero
-              usearch
-              ;
-            inherit (pkgs) pqa; # CLI wrapper
-          };
+          checks = lib.mapAttrs' (n: lib.nameValuePair "package-${n}") self'.packages;
 
           devShells.default = pkgs.mkShellNoCC {
             packages = [
