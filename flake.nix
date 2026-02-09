@@ -36,7 +36,7 @@
           };
 
           packages = {
-            # inherit (pkgs.python3Packages) paper-qa;
+            inherit (pkgs.python3Packages) fhaviary;
           };
 
           devShells.default = pkgs.mkShellNoCC {

@@ -1,7 +1,7 @@
 _final: prev: {
   pythonPackagesExtensions = prev.pythonPackagesExtensions ++ [
-    (_py-final: _py-prev: {
-      # paper-qa = py-final.callPackage ../packages/paper-qa/package.nix { };
+    (py-final: _py-prev: {
+      fhaviary = py-final.callPackage ../packages/fhaviary/package.nix { };
     })
   ];
 }
