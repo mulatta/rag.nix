@@ -10,15 +10,18 @@
   litellm,
   pydantic,
   tiktoken,
+  # optional
+  pillow,
 }:
 
-buildPythonPackage rec {
+buildPythonPackage (finalAttrs: {
   pname = "fhlmi";
   version = "0.43.1";
   pyproject = true;
 
   src = fetchPypi {
-    inherit pname version;
+    inherit (finalAttrs) pname;
+    inherit (finalAttrs) version;
     hash = "sha256-Y7f2+NxV6wgrebwoYA3+LmyXIfGY7HayR0rq24xBM2k=";
   };
 
@@ -36,6 +39,10 @@ buildPythonPackage rec {
     tiktoken
   ];
 
+  optional-dependencies = {
+    image = [ pillow ];
+  };
+
   pythonImportsCheck = [ "lmi" ];
 
   # Tests require network access and additional dependencies
@@ -46,5 +53,6 @@ buildPythonPackage rec {
     homepage = "https://github.com/Future-House/ldp";
     license = lib.licenses.asl20;
     maintainers = [ ];
+    platforms = lib.platforms.unix;
   };
-}
+})

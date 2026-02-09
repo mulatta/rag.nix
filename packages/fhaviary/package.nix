@@ -10,7 +10,7 @@
   pydantic,
 }:
 
-buildPythonPackage rec {
+buildPythonPackage (finalAttrs: {
   pname = "fhaviary";
   version = "0.32.0";
   pyproject = true;
@@ -18,7 +18,7 @@ buildPythonPackage rec {
   src = fetchFromGitHub {
     owner = "Future-House";
     repo = "aviary";
-    tag = "v${version}";
+    tag = "v${finalAttrs.version}";
     hash = "sha256-CRL/JrPwsAxDP+1XpO56cBc5nqIyHZX9BYfv6pMq1sQ=";
   };
 
@@ -44,5 +44,6 @@ buildPythonPackage rec {
     homepage = "https://github.com/Future-House/aviary";
     license = lib.licenses.asl20;
     maintainers = [ ];
+    platforms = lib.platforms.unix;
   };
-}
+})
