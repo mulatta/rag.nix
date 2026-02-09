@@ -1,6 +1,7 @@
 _final: prev: {
   pythonPackagesExtensions = prev.pythonPackagesExtensions ++ [
     (py-final: _py-prev: {
+      docling-parse = py-final.callPackage ../packages/docling-parse/package.nix { };
       fhaviary = py-final.callPackage ../packages/fhaviary/package.nix { };
       fhlmi = py-final.callPackage ../packages/fhlmi/package.nix { };
       ldp = py-final.callPackage ../packages/ldp/package.nix { };
