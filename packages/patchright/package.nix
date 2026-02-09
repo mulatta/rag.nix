@@ -38,7 +38,8 @@ buildPythonPackage (finalAttrs: {
     # --- Update internal imports (35 files, .patch impractical) ---
     find patchright -type f -name '*.py' -exec sed -i \
       -e 's/from playwright/from patchright/g' \
-      -e 's/import playwright/import patchright/g' {} \;
+      -e 's/import playwright/import patchright/g' \
+      -e 's/playwright\./patchright./g' {} \;
 
     # --- Update pyproject.toml (substituteInPlace for fail-fast) ---
     substituteInPlace pyproject.toml \
