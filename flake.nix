@@ -39,6 +39,7 @@
             inherit (pkgs.python3Packages)
               fhaviary
               fhlmi
+              ldp
               paper-qa
               paper-qa-pypdf
               pyzotero

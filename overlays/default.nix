@@ -3,6 +3,7 @@ _final: prev: {
     (py-final: _py-prev: {
       fhaviary = py-final.callPackage ../packages/fhaviary/package.nix { };
       fhlmi = py-final.callPackage ../packages/fhlmi/package.nix { };
+      ldp = py-final.callPackage ../packages/ldp/package.nix { };
       paper-qa = py-final.callPackage ../packages/paper-qa/package.nix { };
       paper-qa-pymupdf = py-final.callPackage ../packages/paper-qa-pymupdf/package.nix { };
       paper-qa-pypdf = py-final.callPackage ../packages/paper-qa-pypdf/package.nix { };
