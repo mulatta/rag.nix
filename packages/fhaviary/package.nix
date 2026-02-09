@@ -8,6 +8,8 @@
   httpx,
   httpx-aiohttp,
   pydantic,
+  # optional
+  pillow,
 }:
 
 buildPythonPackage (finalAttrs: {
@@ -33,6 +35,10 @@ buildPythonPackage (finalAttrs: {
     httpx-aiohttp
     pydantic
   ];
+
+  optional-dependencies = {
+    image = [ pillow ];
+  };
 
   pythonImportsCheck = [ "aviary" ];
 
