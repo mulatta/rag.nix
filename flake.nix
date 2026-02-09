@@ -43,6 +43,7 @@
               ldp
               openreview-py
               paper-qa
+              paper-qa-docling
               paper-qa-nemotron
               paper-qa-pypdf
               pyzotero
