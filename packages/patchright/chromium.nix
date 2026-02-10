@@ -27,7 +27,7 @@
   nss,
   pango,
   pciutils,
-  systemd,
+  systemdLibs,
   vulkan-loader,
   libX11,
   libXcomposite,
@@ -104,7 +104,7 @@ let
       nss
       pango
       stdenv.cc.cc.lib
-      systemd
+      systemdLibs
       libX11
       libXcomposite
       libXdamage

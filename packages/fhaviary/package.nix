@@ -9,6 +9,9 @@
   httpx-aiohttp,
   pydantic,
   # optional
+  fhlmi,
+  litellm,
+  packaging,
   pillow,
 }:
 
@@ -38,6 +41,11 @@ buildPythonPackage (finalAttrs: {
 
   optional-dependencies = {
     image = [ pillow ];
+    llm = [
+      fhlmi
+      litellm
+      packaging
+    ];
   };
 
   pythonImportsCheck = [ "aviary" ];

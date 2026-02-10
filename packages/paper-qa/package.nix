@@ -55,6 +55,9 @@ buildPythonPackage (finalAttrs: {
     anyio
     fhaviary
     fhlmi
+  ]
+  ++ fhaviary.optional-dependencies.llm
+  ++ [
     html2text
     httpx
     httpx-aiohttp
@@ -79,9 +82,15 @@ buildPythonPackage (finalAttrs: {
       usearch
     ];
     nemotron = [ paper-qa-nemotron ];
-    office = [ unstructured ];
+    office = [
+      unstructured
+    ]
+    ++ unstructured.optional-dependencies.docx
+    ++ unstructured.optional-dependencies.xlsx
+    ++ unstructured.optional-dependencies.pptx;
     openreview = [ openreview-py ];
     pymupdf = [ paper-qa-pymupdf ];
+    pypdf-enhanced = paper-qa-pypdf.optional-dependencies.enhanced;
     pypdf-media = paper-qa-pypdf.optional-dependencies.media;
     qdrant = [ qdrant-client ];
     zotero = [

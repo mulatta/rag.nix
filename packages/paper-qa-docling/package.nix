@@ -6,7 +6,6 @@
   setuptools-scm,
   docling,
   docling-core,
-  docling-parse,
 }:
 
 buildPythonPackage (finalAttrs: {
@@ -31,7 +30,6 @@ buildPythonPackage (finalAttrs: {
   dependencies = [
     docling
     docling-core
-    docling-parse
     # paper-qa - circular dependency, will be satisfied at runtime
   ];
 
