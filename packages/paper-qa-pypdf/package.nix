@@ -6,6 +6,8 @@
   setuptools-scm,
   pypdf,
   # optional
+  pdfplumber,
+  pillow,
   pypdfium2,
 }:
 
@@ -34,7 +36,15 @@ buildPythonPackage (finalAttrs: {
   ];
 
   optional-dependencies = {
-    media = [ pypdfium2 ];
+    enhanced = [
+      pdfplumber
+      pillow
+      pypdfium2
+    ];
+    media = [
+      pillow
+      pypdfium2
+    ];
   };
 
   # Circular dependency with paper-qa - skip runtime deps check
