@@ -1,48 +1,64 @@
 {
   lib,
   buildPythonPackage,
-  fetchPypi,
+  fetchFromGitHub,
   uv-build,
-  feedparser,
   bibtexparser,
+  click,
+  feedparser,
   httpx,
+  mcp,
   whenever,
+  pythonOlder,
 }:
-
 buildPythonPackage (finalAttrs: {
   pname = "pyzotero";
   version = "1.10.0";
   pyproject = true;
 
-  src = fetchPypi {
-    inherit (finalAttrs) pname version;
-    hash = "sha256-kOxAQOWiYYK54rDqp5RUZLy09XxxCxQYwczRm7XM96c=";
+  disabled = pythonOlder "3.9";
+
+  src = fetchFromGitHub {
+    owner = "urschrei";
+    repo = "pyzotero";
+    tag = "v${finalAttrs.version}";
+    hash = "sha256-61FvzGUd0cThYu8LxhZO+ChTywTgkYtuXo4DBJpxT1A=";
   };
 
   postPatch = ''
     substituteInPlace pyproject.toml \
-      --replace-fail 'requires = ["uv_build>=0.8.14,<0.9.0"]' 'requires = ["uv_build>=0.8.14"]'
+      --replace-fail "uv_build>=0.8.14,<0.9.0" "uv_build"
+
+    # Remove entrypoints that depend on optional dependencies (click, mcp)
+    # to avoid ModuleNotFoundError at runtime
+    substituteInPlace pyproject.toml \
+      --replace-fail 'pyzotero = "pyzotero.cli:main"' "" \
+      --replace-fail 'pyzotero-mcp = "pyzotero.mcp_server:main"' ""
   '';
 
   build-system = [ uv-build ];
 
   dependencies = [
-    feedparser
     bibtexparser
+    feedparser
     httpx
     whenever
   ];
 
-  pythonImportsCheck = [ "pyzotero" ];
+  optional-dependencies = {
+    cli = [ click ];
+    mcp = [ mcp ];
+  };
 
-  # Tests require network access
+  # Tests require network access (Zotero API)
   doCheck = false;
 
+  pythonImportsCheck = [ "pyzotero" ];
+
   meta = {
-    description = "Python wrapper for the Zotero API";
+    description = "Pyzotero: a Python client for the Zotero API";
     homepage = "https://github.com/urschrei/pyzotero";
-    license = lib.licenses.mit;
-    maintainers = [ ];
-    platforms = lib.platforms.unix;
+    changelog = "https://github.com/urschrei/pyzotero/blob/${finalAttrs.src.tag}/CHANGES.md";
+    license = lib.licenses.blueOak100;
   };
 })
