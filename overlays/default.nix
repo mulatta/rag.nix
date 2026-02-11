@@ -35,6 +35,13 @@ final: prev: {
 
       # crawl4ai
       crawl4ai = py-final.callPackage ../packages/crawl4ai/package.nix { };
+
+      # mem0ai and dependencies
+      # TODO: Remove redis5 when nixpkgs redis updates to satisfy >=5.0.0,<6.0.0
+      redis5 = py-final.callPackage ../packages/redis5/package.nix { };
+      mem0ai = py-final.callPackage ../packages/mem0ai/package.nix {
+        redis = py-final.redis5;
+      };
     })
   ];
 
