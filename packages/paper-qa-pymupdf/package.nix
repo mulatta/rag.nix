@@ -1,25 +1,19 @@
 {
   lib,
   buildPythonPackage,
-  fetchFromGitHub,
   setuptools,
   setuptools-scm,
   pymupdf,
+  # src provider
+  paper-qa,
 }:
 
-buildPythonPackage (finalAttrs: {
+buildPythonPackage {
   pname = "paper-qa-pymupdf";
-  version = "2026.01.05";
+  inherit (paper-qa) version src;
   pyproject = true;
 
-  src = fetchFromGitHub {
-    owner = "Future-House";
-    repo = "paper-qa";
-    tag = "v${finalAttrs.version}";
-    hash = "sha256-Cb/OPssQU2crONycYJnl2e56o6qwFXfrwpLZWpH88GY=";
-  };
-
-  sourceRoot = "${finalAttrs.src.name}/packages/paper-qa-pymupdf";
+  sourceRoot = "${paper-qa.src.name}/packages/paper-qa-pymupdf";
 
   build-system = [
     setuptools
@@ -36,10 +30,9 @@ buildPythonPackage (finalAttrs: {
   doCheck = false;
 
   meta = {
+    inherit (paper-qa.meta) homepage maintainers;
     description = "PaperQA readers implemented using PyMuPDF";
-    homepage = "https://github.com/Future-House/paper-qa";
-    license = lib.licenses.agpl3Only;
-    maintainers = [ ];
+    license = lib.licenses.agpl3Only; # Different from paper-qa (asl20)
     platforms = lib.platforms.unix;
   };
-})
+}
