@@ -1,26 +1,20 @@
 {
   lib,
   buildPythonPackage,
-  fetchFromGitHub,
   setuptools,
   setuptools-scm,
   docling,
   docling-core,
+  # src provider
+  paper-qa,
 }:
 
-buildPythonPackage (finalAttrs: {
+buildPythonPackage {
   pname = "paper-qa-docling";
-  version = "2026.01.05";
+  inherit (paper-qa) version src;
   pyproject = true;
 
-  src = fetchFromGitHub {
-    owner = "Future-House";
-    repo = "paper-qa";
-    tag = "v${finalAttrs.version}";
-    hash = "sha256-Cb/OPssQU2crONycYJnl2e56o6qwFXfrwpLZWpH88GY=";
-  };
-
-  sourceRoot = "${finalAttrs.src.name}/packages/paper-qa-docling";
+  sourceRoot = "${paper-qa.src.name}/packages/paper-qa-docling";
 
   build-system = [
     setuptools
@@ -38,10 +32,9 @@ buildPythonPackage (finalAttrs: {
   doCheck = false;
 
   meta = {
+    inherit (paper-qa.meta) homepage maintainers;
     description = "PaperQA readers implemented using Docling";
-    homepage = "https://github.com/Future-House/paper-qa";
     license = lib.licenses.asl20;
-    maintainers = [ ];
     # Inherits platform constraints from docling-parse (wheel-based)
     platforms = [
       "x86_64-linux"
@@ -49,4 +42,4 @@ buildPythonPackage (finalAttrs: {
       "aarch64-darwin"
     ];
   };
-})
+}
